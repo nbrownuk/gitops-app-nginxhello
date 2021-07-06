@@ -40,6 +40,6 @@ jobs:
         uses: peter-evans/repository-dispatch@v1
         with:
           token: ${{ secrets.REPO_ACCESS_TOKEN }}
-          event-type: image-tag-update
+          event-type: image-update
           repository: ${{ github.repository_owner }}/gitops-config-nginxhello
-          client-payload: '{"tag": "${{ steps.tag.outputs.TAG }}"}'
+          client-payload: '{"tag": "${{ secrets.DOCKERHUB_USERNAME }}/nginxhello:${{ steps.tag.outputs.TAG }}"}'
