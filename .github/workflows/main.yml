@@ -9,8 +9,14 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
+      #      - name: Checkout
+      #  uses: actions/checkout@v2
+
+      - name: Generate image tag
+        id: tag
+        run: |
+          tag=${GITHUB_SHA::8}
+          echo ::set-output name=TAG::${tag}
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
@@ -28,12 +34,12 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: true
-          tags: ironhive/nginxhello:${{ github.sha }}
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/nginxhello:${{ steps.tag.outputs.TAG }}
 
       - name: Repository Dispatch
         uses: peter-evans/repository-dispatch@v1
         with:
           token: ${{ secrets.REPO_ACCESS_TOKEN }}
           event-type: image-tag-update
-          repository: nbrownuk/gitops-config-nginxhello
-          client-payload: '{"tag": "${{ github.sha }}"}'
+          repository: ${{ github.repository_owner }}/gitops-config-nginxhello
+          client-payload: '{"tag": "${{ steps.tag.outputs.TAG }}"}'
