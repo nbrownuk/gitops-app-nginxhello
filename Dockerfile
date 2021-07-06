@@ -13,7 +13,7 @@ FROM build-tools AS retrieve
 
 # Define build argument for version
 ARG VERSION
-ENV VERSION ${VERSION:-1.18.0}
+ENV VERSION ${VERSION:-1.19.0}
 
 # Retrieve and verify Nginx source
 RUN wget -q http://nginx.org/download/nginx-${VERSION}.tar.gz     && \
